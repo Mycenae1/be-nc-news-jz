@@ -13,7 +13,7 @@ afterAll(() =>{
 });
 
 
-describe.only('GET api/topics', () => {
+describe('GET api/topics', () => {
     test('should return a 200 status', () => {
         return supertest(app).get('/api/topics').expect(200)
     
@@ -21,7 +21,7 @@ describe.only('GET api/topics', () => {
     test('should return an array of topic objects with correct properties', () => {
         return supertest(app).get('/api/topics').expect(200)
         .then(({body}) => {
-            expect(body.length).toBeGreaterThan(0);
+            expect(body.length).toEqual(3);
 
             body.forEach((topic) => {
                     expect(topic).toHaveProperty('slug');
@@ -54,19 +54,18 @@ describe('GET api/articles', () => {
     
     })
     test('should return an array of topic objects with correct properties', () => {
-        return supertest(app).get('/api/topics').expect(200)
+        return supertest(app).get('/api/articles').expect(200)
         .then(({body}) => {
-            expect(body.length).toBeGreaterThan(0);
-                console.log(body)
-            body.forEach((topic) => {
-                    expect(topic).toHaveProperty('author');
-                    expect(topic).toHaveProperty('title');
-                    expect(topic).toHaveProperty('article_id');
-                    expect(topic).toHaveProperty('topic');
-                    expect(topic).toHaveProperty('created_at');
-                    expect(topic).toHaveProperty('votes');
-                    expect(topic).toHaveProperty('article_img_url');
-                    expect(topic).toHaveProperty('comment_count');
+            expect(body.length).toEqual(5); 
+            body.forEach((article) => {
+                    expect(article).toHaveProperty('author');
+                    expect(article).toHaveProperty('title');
+                    expect(article).toHaveProperty('article_id');
+                    expect(article).toHaveProperty('topic');
+                    expect(article).toHaveProperty('created_at');
+                    expect(article).toHaveProperty('votes');
+                    expect(article).toHaveProperty('article_img_url');
+                    expect(article).toHaveProperty('comments_count');
                    
             })
         })
@@ -81,6 +80,8 @@ describe('GET api/articles', () => {
 
         })
     })
+
+
 
 
 
