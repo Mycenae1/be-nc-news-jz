@@ -3,13 +3,13 @@
 const express = require('express');
 const app = express();
 app.use(express.json());
-const {getTopics, getArticles} = require('./controller')
+const {getTopics, getArticles, getArticlesById} = require('./controller')
 
 app.get('/api/topics', getTopics)
 
 app.get('/api/articles', getArticles)
 
-
+app.get('/api/articles/:article_id', getArticlesById)
 
 app.use((error, request, response, next) => {
     if(error.status){
@@ -20,6 +20,8 @@ app.use((error, request, response, next) => {
 })
 
 
+
+
 app.use((error, request, response, next) => {
     if(error){
     response.status(500).send({ message: 'Internal Server Error' });
@@ -27,10 +29,19 @@ app.use((error, request, response, next) => {
     
 })
 
+
 app.use((req, res, next) => {
-    res.status(404).send({message: 'URL not found'});
+    res.status(400).send({message: 'Invalid Request'});
+    next(error);
   });
   
+  app.use((req, res, next) => {
+    res.status(404).send({message: 'article id not found'});
+    next(error);
+  });
+
+
+
 
 
 

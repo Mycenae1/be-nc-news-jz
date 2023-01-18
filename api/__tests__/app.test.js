@@ -48,7 +48,7 @@ describe('GET api/topics', () => {
 
 
 
-describe('GET api/articles', () => {
+describe('GET api/articles/', () => {
     test('should return a 200 status', () => {
         return supertest(app).get('/api/articles').expect(200)
     
@@ -71,12 +71,12 @@ describe('GET api/articles', () => {
         })
     })
 
-    test('should return 404 error when url is not found', () => {
+    test('should return 400 error when url is not found', () => {
         return supertest(app)
         .get('/api/banana')
-        .expect(404)
+        .expect(400)
         .then(({body}) => {
-            expect(body.message).toBe('URL not found');
+            expect(body.message).toBe('Invalid Request');
 
         })
     })
@@ -89,3 +89,51 @@ describe('GET api/articles', () => {
 
 
 
+describe.only('GET api/articles/:article_id', () => {
+    test('should return a 200 status', () => {
+        return supertest(app).get('/api/articles/1').expect(200)
+    
+    })
+    test('should return an object representing the correct article', () => {
+        return supertest(app).get('/api/articles/1').expect(200)
+        .then(({body}) => {
+            const bodySize = Object.keys({body}).length
+            expect(bodySize).toEqual(1); 
+            console.log(body.articles)
+            const size = Object.keys(body.articles).length;
+            expect(size).toEqual(8)
+
+                    expect(body.articles).toHaveProperty('author');
+                    expect(body.articles).toHaveProperty('title');
+                    expect(body.articles).toHaveProperty('article_id');
+                    expect(body.articles).toHaveProperty('body');
+                    expect(body.articles).toHaveProperty('topic');
+                    expect(body.articles).toHaveProperty('created_at');
+                    expect(body.articles).toHaveProperty('votes');
+                    expect(body.articles).toHaveProperty('article_img_url');
+                   
+            
+        })
+    })
+
+    test('should return 400 error when url is not found', () => {
+        return supertest(app)
+        .get('/api/banana')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.message).toBe('Invalid Request');
+
+        })
+      })
+
+      test('should return 404 error when article id is invalid', () => {
+        return supertest(app)
+        .get('/api/articles/999')
+        .expect(404)
+        .then(({body}) => {
+            expect(body.message).toBe('URL not found');
+
+        })
+
+})
+})
