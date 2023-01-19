@@ -99,11 +99,6 @@ const fetchComments = (id) => {
 
 const postComment = (id, comment) => {
     const myId = id.article_id;
-//     console.log(myId) // 1
-//     console.log(id) // { article_id: '1' }
-//    console.log(comment) // { username: 'icellusedkars', body: 'Test comment' }
-//    console.log(comment.username) // icellusedkars
-//    console.log(comment.body) // Test comment
     return db.query(
         `INSERT INTO comments (
                 article_id, 
@@ -115,7 +110,6 @@ const postComment = (id, comment) => {
             [myId,comment.username, comment.body]
         )
         .then((result) => {
-            console.log(result) // Nothing
             return result.rows[0]
          })
 }
