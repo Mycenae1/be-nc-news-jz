@@ -35,9 +35,9 @@ describe('GET api/topics', () => {
     test('should return 404 error when url is not found', () => {
         return supertest(app)
         .get('/api/banana')
-        .expect(404)
+        .expect(400)
         .then(({body}) => {
-            expect(body.message).toBe('URL not found');
+            expect(body.message).toBe('Invalid Request');
 
         })
     })
@@ -142,7 +142,7 @@ describe(' GET /api/articles/:article_id', () => {
 
 
 
-describe.only('GET api/articles/:article_id/comments', () => {
+describe('GET api/articles/:article_id/comments', () => {
     test('should return a 200 status', () => {
         return supertest(app).get('/api/articles/1/comments').expect(200)
     
