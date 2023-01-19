@@ -40,7 +40,7 @@ const fetchArticles = (query) => {
 
 const fetchArticlesById = (id) => {
     const myId = id.article_id;
-    console.log(myId)
+    // console.log(myId)
     return db.query(`SELECT
     articles.author,
     articles.title,
@@ -58,7 +58,6 @@ const fetchArticlesById = (id) => {
    
    `)
    .then(({rows})=> {
-    console.log(rows.length)
     if(rows.length === 0){
         return Promise.reject({ status: 404, message: 'URL not found' })
     
@@ -72,7 +71,66 @@ const fetchArticlesById = (id) => {
 
 
 
+const fetchComments = (id) => {
+    const myId = +id.article_id;
+    // console.log(myId)
+    return db.query(`SELECT
+    *
+    FROM comments
+    WHERE comments.article_id = $1
+    ORDER BY comments.created_at  ; `, [myId])
+
+   .then(({rows})=> {
+   
+    if(rows.length === 0){        
+        return Promise.reject({ status: 404, message: 'URL not found' })
+    
+    } else {
+    return  rows
+    }
+})
+};
 
 
 
-module.exports = {fetchTopics,fetchArticles, fetchArticlesById};
+
+
+
+
+
+
+const postComment = (id, comment) => {
+    const myId = id.article_id;
+//     console.log(myId) // 1
+//     console.log(id) // { article_id: '1' }
+//    console.log(comment) // { username: 'icellusedkars', body: 'Test comment' }
+//    console.log(comment.username) // icellusedkars
+//    console.log(comment.body) // Test comment
+    return db.query(
+        `INSERT INTO comments (
+                article_id, 
+                author,
+                body
+                
+                
+            ) VALUES ($1, $2, $3) RETURNING *;`,
+            [myId,comment.username, comment.body]
+        )
+        .then((result) => {
+            console.log(result) // Nothing
+            return result.rows[0]
+         })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+module.exports = {fetchTopics,fetchArticles, fetchArticlesById, fetchComments, postComment};

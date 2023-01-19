@@ -1,15 +1,18 @@
-
-
 const express = require('express');
 const app = express();
 app.use(express.json());
-const {getTopics, getArticles, getArticlesById} = require('./controller')
+const {getTopics, getArticles, getArticlesById, getComments, addComment} = require('./controller')
+
+
 
 app.get('/api/topics', getTopics)
-
 app.get('/api/articles', getArticles)
-
 app.get('/api/articles/:article_id', getArticlesById)
+app.get('/api/articles/:article_id/comments', getComments)
+app.post('/api/articles/:article_id/comments', addComment)
+
+
+
 
 app.use((error, request, response, next) => {
     if(error.status){
@@ -24,7 +27,9 @@ app.use((error, request, response, next) => {
 
 app.use((error, request, response, next) => {
     if(error){
+    console.log(error)
     response.status(500).send({ message: 'Internal Server Error' });
+    
     }
     
 })
