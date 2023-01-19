@@ -110,7 +110,6 @@ const postComment = (id, comment) => {
             [myId,comment.username, comment.body]
         )
         .then((result) => {
-            console.log(result)
             return result.rows[0]
          })
 }
