@@ -40,7 +40,6 @@ const fetchArticles = (query) => {
 
 const fetchArticlesById = (id) => {
     const myId = id.article_id;
-    // console.log(myId)
     return db.query(`SELECT
     articles.author,
     articles.title,
@@ -73,7 +72,6 @@ const fetchArticlesById = (id) => {
 
 const fetchComments = (id) => {
     const myId = +id.article_id;
-    // console.log(myId)
     return db.query(`SELECT
     *
     FROM comments

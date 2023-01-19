@@ -142,7 +142,7 @@ describe(' GET /api/articles/:article_id', () => {
 
 
 
-describe('GET api/articles/:article_id/comments', () => {
+describe.only('GET api/articles/:article_id/comments', () => {
     test('should return a 200 status', () => {
         return supertest(app).get('/api/articles/1/comments').expect(200)
     
@@ -191,7 +191,7 @@ describe('GET api/articles/:article_id/comments', () => {
 
 
 
-describe.only('POST api/articles/:article_id/comments', () => {
+describe('POST api/articles/:article_id/comments', () => {
     test('should return a 200 status', () => {
         return supertest(app).get('/api/articles/1/comments').expect(200)
     
@@ -206,8 +206,6 @@ describe.only('POST api/articles/:article_id/comments', () => {
         return supertest(app).post('/api/articles/1/comments').send(newComment)
         .expect(201)
         .then((response) =>{
-            console.log(response)
-            console.log(response.body)
             const ObjectLength = Object.keys(response.body).length
             expect(ObjectLength).toEqual(6)
             expect(response.body).toHaveProperty('article_id')
