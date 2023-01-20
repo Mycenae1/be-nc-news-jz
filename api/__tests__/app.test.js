@@ -81,8 +81,84 @@ describe('GET api/articles/', () => {
         })
     })
 
+  test('200: Accepts a topic query ', () => {
+        return supertest(app)
+        .get('/api/articles?topic=mitch')
+        .expect(200)
+        .then(({body}) => {
+
+            expect(body).toHaveLength(4);
+
+            body.forEach((article) => {
+                expect(article.topic).toBe('mitch')
+            })
+
+        })
+        
+    })
+
+    test('400: topic query is invalid', () => {
+        return supertest(app)
+        .get('/api/treasures?topic=banana')
+        .expect(400)
+        .then(({body}) => {
+            expect(body).toEqual({ message: 'Invalid Request'});
+        })
+    })
 
 
+
+
+
+    test('200: Accepts a sort_by ', () => {
+        return supertest(app)
+        .get('/api/articles?sort_by=created_at')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.length).toBe(5);
+            const allSorted = [];
+            body.forEach((item) => {
+                allSorted.push(item.treasure_name)
+            })
+            const sortedArticlesCopy = [...allSorted];
+            const sortedArticles = allSorted.sort()
+            expect(sortedArticles).toEqual(sortedArticlesCopy);
+        })
+    })
+    test('400: bad request when passed invalid column to sort by', () => {
+        return supertest(app)
+        .get('/api/treasures?sort_by=banana')
+        .expect(400)
+        .then(({body}) => {
+            expect(body).toEqual({ message: 'Invalid Request'});
+        })
+
+    })
+    test('200: Can switch order to descending ', () => {
+        return supertest(app)
+        .get('/api/articles?order=desc')
+        .expect(200)
+        .then(({body}) => {
+
+            expect(body.length).toBeGreaterThan(0);
+            const createdAt = []
+            body.forEach((item) => {
+                createdAt.push(item.created_at)
+            })
+            const createdCopy = [...createdAt];
+            const sortedArticles = createdAt.sort((a,b) => b - a)
+            expect(sortedArticles).toEqual(createdCopy);
+        })
+    })
+
+    test('400: bad request when passed invalid order to sort by', () => {
+        return supertest(app)
+        .get('/api/treasures?order=banana')
+        .expect(400)
+        .then(({body}) => {
+            expect(body).toEqual({ message: 'Invalid Request'});
+        })
+    })
 
 
 })
