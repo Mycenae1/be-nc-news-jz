@@ -70,6 +70,7 @@ const fetchArticlesById = (id) => {
 
 
 
+
 const fetchComments = (id) => {
     const myId = +id.article_id;
     return db.query(`SELECT
@@ -79,21 +80,15 @@ const fetchComments = (id) => {
     ORDER BY comments.created_at  ; `, [myId])
 
    .then(({rows})=> {
-   
     if(rows.length === 0){        
-        return Promise.reject({ status: 404, message: 'URL not found' })
+        return Promise.reject({ status: 200, message: 'Comments not found' })
     
     } else {
     return  rows
     }
+
 })
 };
-
-
-
-
-
-
 
 
 
@@ -109,7 +104,25 @@ const postComment = (id, comment) => {
             ) VALUES ($1, $2, $3) RETURNING *;`,
             [myId,comment.username, comment.body]
         )
+        .then((result) => { 
+
+            return result.rows[0]
+         })
+}
+
+
+
+const updateVotes = (id, number) => {
+    const myId = id.article_id;
+    return db.query(
+        `UPDATE articles
+        SET votes = votes + ${number.inc_votes}
+        WHERE articles.article_id = $1
+        RETURNING *;`, 
+            [myId]
+        )
         .then((result) => {
+            console.log(result.rows) 
             return result.rows[0]
          })
 }
@@ -122,7 +135,4 @@ const postComment = (id, comment) => {
 
 
 
-
-
-
-module.exports = {fetchTopics,fetchArticles, fetchArticlesById, fetchComments, postComment};
+module.exports = {fetchTopics,fetchArticles, fetchArticlesById, fetchComments, postComment, updateVotes};
