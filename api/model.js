@@ -70,7 +70,6 @@ const fetchArticlesById = (id) => {
     articles.created_at,
     articles.votes,
     articles.article_img_url
-    
     FROM articles
     JOIN comments
     ON articles.article_id = comments.article_id
