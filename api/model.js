@@ -73,7 +73,6 @@ const fetchArticlesById = (id) => {
 
 const fetchComments = (id) => {
     const myId = +id.article_id;
-   
     return db.query(`SELECT
     *
     FROM comments
@@ -106,6 +105,7 @@ const postComment = (id, comment) => {
             [myId,comment.username, comment.body]
         )
         .then((result) => { 
+
             return result.rows[0]
          })
 }

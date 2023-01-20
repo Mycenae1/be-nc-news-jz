@@ -46,8 +46,8 @@ const getComments = (request,response,next) => {
         
     })
     .then((comments) => {
+
       response.status(200).send(comments);
-    
         
     })
     .catch(next);
