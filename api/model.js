@@ -13,6 +13,27 @@ const fetchTopics = (query) => {
 
 
 const fetchArticles = (query) => {
+    const {order, sort_by, topic } = query;
+    const acceptedSortBys = ['author', 'title', 'article_id', 'topic', 'created_at','votes','article_img_url'];
+    const acceptedOrders =['ASC','DESC'];
+    const acceptedTopics =['cats','mitch','paper']
+    const toInput = []
+
+    sort_by === undefined ? toInput.push('created_at') : toInput.push(sort_by);
+    order === undefined ? toInput.push('DESC') : toInput.push(order.toUpperCase());
+    topic === undefined ? toInput.push('') : toInput.push(`WHERE articles.topic = '${topic}'`)
+  
+
+    if (!acceptedSortBys.includes(toInput[0])) {
+        return Promise.reject({status:400, message: 'bad request'})
+    }
+
+    if (!acceptedOrders.includes(toInput[1])) {
+        return Promise.reject({status:400, message: 'bad request'})
+    }
+
+
+
     return db.query(`SELECT
     articles.author,
     articles.title,
@@ -24,15 +45,15 @@ const fetchArticles = (query) => {
     COUNT (comments.comment_id) AS comments_count
      FROM articles
     JOIN comments
-    ON articles.article_id = comments.article_id
+    ON articles.article_id = comments.article_id  ${toInput[2]}
     GROUP BY 
     articles.article_id 
     ORDER BY 
-    articles.created_at DESC;
+    ${toInput[0]} ${toInput[1]}
  
 
      
-    `)
+    ;`)
     
 };
 

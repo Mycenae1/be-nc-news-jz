@@ -28,6 +28,7 @@ app.use((error, request, response, next) => {
 
 app.use((error, request, response, next) => {
     if(error){
+        console.log(error)
     response.status(500).send({ message: 'Internal Server Error' });
     
     }
