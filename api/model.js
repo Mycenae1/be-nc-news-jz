@@ -73,10 +73,10 @@ const fetchArticlesById = (id) => {
     FROM articles
     JOIN comments
     ON articles.article_id = comments.article_id
-    WHERE articles.article_id = ${myId}
+    WHERE articles.article_id = $1
     ;
    
-   `)
+   `, [myId])
    .then(({rows})=> {
     if(rows.length === 0){
         return Promise.reject({ status: 404, message: 'URL not found' })
