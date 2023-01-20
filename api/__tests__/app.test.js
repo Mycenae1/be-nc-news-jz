@@ -165,7 +165,7 @@ describe('GET api/articles/', () => {
 
 
 
-describe(' GET /api/articles/:article_id', () => {
+describe.only(' GET /api/articles/:article_id', () => {
     test('should return a 200 status', () => {
         return supertest(app).get('/api/articles/1').expect(200)
     
@@ -186,7 +186,7 @@ describe(' GET /api/articles/:article_id', () => {
                     expect(body.articles).toHaveProperty('created_at');
                     expect(body.articles).toHaveProperty('votes');
                     expect(body.articles).toHaveProperty('article_img_url');
-                   
+                    
             
         })
     })
