@@ -1,4 +1,4 @@
-const {fetchTopics,fetchArticles, fetchArticlesById, fetchComments, postComment} = require('./model')
+const {fetchTopics,fetchArticles, fetchArticlesById, fetchComments, postComment, updateVotes} = require('./model')
 
 
 const getTopics  = (request,response,next) => {
@@ -41,14 +41,13 @@ const getArticlesById = (request,response,next) => {
 const getComments = (request,response,next) => {
     const id = request.params
     fetchComments(id)
-    // console.log(id)
     .then(()=> {
         return fetchComments(id);
         
     })
     .then((comments) => {
-        // console.log(comments)
-        response.status(200).send(comments);
+      response.status(200).send(comments);
+    
         
     })
     .catch(next);
@@ -64,15 +63,11 @@ const getComments = (request,response,next) => {
 const addComment = (request,response,next) => {
     const commentId = request.params;
     const {username, body} = request.body;
-    // console.log(commentId); //  { article_id: '1' }
-    // console.log({username, body}); // { username: 'icellusedkars', body: 'Test comment' }
     postComment(commentId,{username, body} )
     .then(() =>{
             return postComment(commentId,{username, body})
         })
         .then((comment) => {
-            console.log(comment) // Nothing
-            console.log(comment.rows) // Nothing
             response.status(201).send(comment)
         })
     
@@ -83,4 +78,27 @@ const addComment = (request,response,next) => {
 
 
 
-module.exports = {getTopics, getArticles, getArticlesById, getComments, addComment }
+const incrementVotes  = (request,response,next) => {
+    const id = request.params;
+    const voteIncrement = request.body;
+    console.log(id)
+    console.log(voteIncrement)
+
+    updateVotes(id, voteIncrement)
+    .then(() =>{
+            return updateVotes(id, voteIncrement)
+        })
+        .then((articles) => {
+            console.log(articles)
+            response.status(202).send({articles});
+            
+        })
+        .catch(next);
+    
+   
+}
+
+
+
+
+module.exports = {getTopics, getArticles, getArticlesById, getComments, addComment, incrementVotes }

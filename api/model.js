@@ -40,7 +40,6 @@ const fetchArticles = (query) => {
 
 const fetchArticlesById = (id) => {
     const myId = id.article_id;
-    // console.log(myId)
     return db.query(`SELECT
     articles.author,
     articles.title,
@@ -71,9 +70,10 @@ const fetchArticlesById = (id) => {
 
 
 
+
 const fetchComments = (id) => {
     const myId = +id.article_id;
-    // console.log(myId)
+   
     return db.query(`SELECT
     *
     FROM comments
@@ -81,31 +81,20 @@ const fetchComments = (id) => {
     ORDER BY comments.created_at  ; `, [myId])
 
    .then(({rows})=> {
-   
     if(rows.length === 0){        
-        return Promise.reject({ status: 404, message: 'URL not found' })
+        return Promise.reject({ status: 200, message: 'Comments not found' })
     
     } else {
     return  rows
     }
+
 })
 };
 
 
 
-
-
-
-
-
-
 const postComment = (id, comment) => {
     const myId = id.article_id;
-//     console.log(myId) // 1
-//     console.log(id) // { article_id: '1' }
-//    console.log(comment) // { username: 'icellusedkars', body: 'Test comment' }
-//    console.log(comment.username) // icellusedkars
-//    console.log(comment.body) // Test comment
     return db.query(
         `INSERT INTO comments (
                 article_id, 
@@ -116,8 +105,24 @@ const postComment = (id, comment) => {
             ) VALUES ($1, $2, $3) RETURNING *;`,
             [myId,comment.username, comment.body]
         )
+        .then((result) => { 
+            return result.rows[0]
+         })
+}
+
+
+
+const updateVotes = (id, number) => {
+    const myId = id.article_id;
+    return db.query(
+        `UPDATE articles
+        SET votes = votes + ${number.inc_votes}
+        WHERE articles.article_id = $1
+        RETURNING *;`, 
+            [myId]
+        )
         .then((result) => {
-            console.log(result) // Nothing
+            console.log(result.rows) 
             return result.rows[0]
          })
 }
@@ -130,7 +135,4 @@ const postComment = (id, comment) => {
 
 
 
-
-
-
-module.exports = {fetchTopics,fetchArticles, fetchArticlesById, fetchComments, postComment};
+module.exports = {fetchTopics,fetchArticles, fetchArticlesById, fetchComments, postComment, updateVotes};

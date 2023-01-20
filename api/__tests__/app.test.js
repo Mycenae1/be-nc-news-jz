@@ -35,9 +35,9 @@ describe('GET api/topics', () => {
     test('should return 404 error when url is not found', () => {
         return supertest(app)
         .get('/api/banana')
-        .expect(404)
+        .expect(400)
         .then(({body}) => {
-            expect(body.message).toBe('URL not found');
+            expect(body.message).toBe('Invalid Request');
 
         })
     })
@@ -56,6 +56,7 @@ describe('GET api/articles/', () => {
     test('should return an array of topic objects with correct properties', () => {
         return supertest(app).get('/api/articles').expect(200)
         .then(({body}) => {
+            console.log(body)
             expect(body.length).toEqual(5); 
             body.forEach((article) => {
                     expect(article).toHaveProperty('author');
@@ -165,6 +166,17 @@ describe('GET api/articles/:article_id/comments', () => {
         })
     })
 
+    test('an empty array for when there are no comments on an article ', () => {
+        return supertest(app).get('/api/articles/2/comments').expect(200)
+        .then(({body}) => {
+            expect(body).toEqual({ message: 'Comments not found' })
+                 
+            
+        })
+    })
+
+
+
     test('should return 400 error when url is not found', () => {
         return supertest(app)
         .get('/api/banana')
@@ -191,7 +203,7 @@ describe('GET api/articles/:article_id/comments', () => {
 
 
 
-describe.only('POST api/articles/:article_id/comments', () => {
+describe('POST api/articles/:article_id/comments', () => {
     test('should return a 200 status', () => {
         return supertest(app).get('/api/articles/1/comments').expect(200)
     
@@ -206,8 +218,6 @@ describe.only('POST api/articles/:article_id/comments', () => {
         return supertest(app).post('/api/articles/1/comments').send(newComment)
         .expect(201)
         .then((response) =>{
-            console.log(response)
-            console.log(response.body)
             const ObjectLength = Object.keys(response.body).length
             expect(ObjectLength).toEqual(6)
             expect(response.body).toHaveProperty('article_id')
@@ -215,6 +225,60 @@ describe.only('POST api/articles/:article_id/comments', () => {
             expect(response.body).toHaveProperty('author')
             expect(response.body.author).toBe("icellusedkars",)
             expect(response.body.body).toBe("Test comment",)
+         })
+      })
+   
+
+    test('should return 400 error when url is not found', () => {
+        return supertest(app)
+        .get('/api/banana')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.message).toBe('Invalid Request');
+
+        })
+      })
+
+      test('should return 404 error when article id is invalid', () => {
+        return supertest(app)
+        .get('/api/articles/999')
+        .expect(404)
+        .then(({body}) => {
+            expect(body.message).toBe('URL not found');
+
+        })
+    })
+
+})
+
+
+
+describe('PATCH api/articles/:article_id', () => {
+    test('should return a 200 status', () => {
+        return supertest(app).get('/api/articles/1/comments').expect(200)
+    
+    })
+    test('PATCH: 202 - accepts an object and responds with an updates article `', () => {
+        const voteIncrement= {
+            inc_votes: 50
+        }
+
+        return supertest(app).patch('/api/articles/1').send(voteIncrement)
+        .expect(202)
+        .then((response) =>{
+            const article = response.body.articles
+            const objectSize = Object.keys(article).length
+            expect(objectSize).toEqual(8)
+
+                    expect(article).toHaveProperty('author');
+                    expect(article).toHaveProperty('title');
+                    expect(article).toHaveProperty('article_id');
+                    expect(article).toHaveProperty('body');
+                    expect(article).toHaveProperty('topic');
+                    expect(article).toHaveProperty('created_at');
+                    expect(article).toHaveProperty('votes');
+                    expect(article).toHaveProperty('article_img_url');
+                    expect(article.votes).toEqual(200)
          })
       })
    
