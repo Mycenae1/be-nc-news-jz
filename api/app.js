@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 app.use(express.json());
-const {getTopics, getArticles, getArticlesById, getComments, addComment, incrementVotes} = require('./controller')
+const {getTopics, getArticles, getArticlesById, getComments, addComment, incrementVotes, getUsers} = require('./controller')
 
 
 
@@ -11,6 +11,7 @@ app.get('/api/articles/:article_id', getArticlesById)
 app.get('/api/articles/:article_id/comments', getComments)
 app.post('/api/articles/:article_id/comments', addComment)
 app.patch('/api/articles/:article_id', incrementVotes)
+app.get('/api/users', getUsers)
 
 
 

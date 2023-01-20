@@ -122,9 +122,20 @@ const updateVotes = (id, number) => {
             [myId]
         )
         .then((result) => {
-            console.log(result.rows) 
             return result.rows[0]
          })
+}
+
+
+
+const fetchUsers = (query) => {
+    return db.query(`SELECT
+       username,
+       name,
+       avatar_url
+
+        FROM users
+    `)
 }
 
 
@@ -132,7 +143,4 @@ const updateVotes = (id, number) => {
 
 
 
-
-
-
-module.exports = {fetchTopics,fetchArticles, fetchArticlesById, fetchComments, postComment, updateVotes};
+module.exports = {fetchTopics,fetchArticles, fetchArticlesById, fetchComments, postComment, updateVotes, fetchUsers};
