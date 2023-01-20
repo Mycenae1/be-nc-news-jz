@@ -56,7 +56,6 @@ describe('GET api/articles/', () => {
     test('should return an array of topic objects with correct properties', () => {
         return supertest(app).get('/api/articles').expect(200)
         .then(({body}) => {
-            console.log(body)
             expect(body.length).toEqual(5); 
             body.forEach((article) => {
                     expect(article).toHaveProperty('author');
@@ -305,3 +304,39 @@ describe('PATCH api/articles/:article_id', () => {
 
 })
 
+
+
+describe('GET api/users', () => {
+    test('should return a 200 status', () => {
+        return supertest(app).get('/api/users').expect(200)
+    
+    })
+    test('should return an array of topic objects with correct properties', () => {
+        return supertest(app).get('/api/users').expect(200)
+        .then(({body}) => {
+            let userArray = {body}.body
+            let user = userArray[0]
+            expect(userArray.length).toEqual(4)
+                    expect(Object.keys(user).length).toEqual(3)
+                    expect(user).toHaveProperty('username');
+                    expect(user).toHaveProperty('name');
+                    expect(user).toHaveProperty('avatar_url');
+                  
+                   
+            
+        })
+    })
+
+    test('should return 400 error when url is not found', () => {
+        return supertest(app)
+        .get('/api/banana')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.message).toBe('Invalid Request');
+
+        })
+    })
+
+
+
+})
