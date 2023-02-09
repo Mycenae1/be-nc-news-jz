@@ -64,9 +64,6 @@ const addComment = (request,response,next) => {
     const commentId = request.params;
     const {username, body} = request.body;
     postComment(commentId,{username, body} )
-    .then(() =>{
-            return postComment(commentId,{username, body})
-        })
         .then((comment) => {
             response.status(201).send(comment)
         })
