@@ -335,7 +335,7 @@ describe("GET api/users", () => {
   test("should return a 200 status", () => {
     return supertest(app).get("/api/users").expect(200);
   });
-  test("should return an array of topic objects with correct properties", () => {
+  test("should return an array of user objects with correct properties", () => {
     return supertest(app)
       .get("/api/users")
       .expect(200)
@@ -356,6 +356,57 @@ describe("GET api/users", () => {
       .expect(400)
       .then(({body}) => {
         expect(body.message).toBe("Invalid Request");
+      });
+  });
+});
+
+describe("GET api/comments", () => {
+  test("should return a 200 status", () => {
+    return supertest(app).get("/api/comments").expect(200);
+  });
+  test("should return an array of comment objects with correct properties", () => {
+    return supertest(app)
+      .get("/api/comments")
+      .expect(200)
+      .then(({body}) => {
+        let commentArray = {body}.body;
+        let comment = commentArray[0];
+        console.log(commentArray);
+        console.log(comment);
+        expect(Object.keys(comment).length).toEqual(6);
+        expect(comment).toHaveProperty("comment_id");
+        expect(comment).toHaveProperty("body");
+        expect(comment).toHaveProperty("author");
+        expect(comment).toHaveProperty("votes");
+      });
+  });
+
+  test("should return 400 error when url is not found", () => {
+    return supertest(app)
+      .get("/api/banana")
+      .expect(400)
+      .then(({body}) => {
+        expect(body.message).toBe("Invalid Request");
+      });
+  });
+});
+
+describe.skip("DELETE /api/articles/:article_id/comments/:comment_id ", () => {
+  test("should return a 200 status", () => {
+    return supertest(app)
+      .delete(`/api/articles/1/comments/1`)
+      .expect(204)
+      .then((response) => {
+        expect(response.body).toBe({});
+        console.log(response);
+      });
+  });
+  test("should respond with 404 if the comment id is invalid", () => {
+    return supertest(app)
+      .delete(`/api/articles/1/comments/999999`)
+      .expect(404)
+      .then(({body}) => {
+        expect(body.message).toBe("Comment not found");
       });
   });
 });
