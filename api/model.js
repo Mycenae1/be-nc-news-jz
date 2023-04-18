@@ -120,7 +120,7 @@ const fetchComments = (id) => {
 };
 
 const postComment = (id, comment) => {
-  const myId = id.article_id;
+  const myId = +id.article_id;
   return db
     .query(
       `INSERT INTO comments (
@@ -162,6 +162,33 @@ const fetchUsers = (query) => {
     `);
 };
 
+const fetchAllComments = (query) => {
+  return db.query(`SELECT
+       *
+
+        FROM comments
+    `);
+};
+
+// const deleteComment = (id) => {
+//   return db
+//     .query(
+//       `DELETE FROM comments (
+//                   article_id,
+//                   author,
+//                   body,
+//                   created_at,
+//                   votes,
+//                   comment_id
+
+//               ) WHERE comment_id = $1 RETURNING*;`,
+//       [id]
+//     )
+//     .then(({rows}) => {
+//       return rows[0];
+//     });
+// };
+
 module.exports = {
   fetchTopics,
   fetchArticles,
@@ -170,4 +197,6 @@ module.exports = {
   postComment,
   updateVotes,
   fetchUsers,
+  // deleteComment,
+  fetchAllComments,
 };
