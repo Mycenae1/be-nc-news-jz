@@ -9,7 +9,7 @@ const {
   addComment,
   incrementVotes,
   getUsers,
-  // removeComment,
+  removeComment,
   getAllComments,
 } = require("./controller");
 const cors = require("cors");
@@ -23,7 +23,7 @@ app.post("/api/articles/:article_id/comments", addComment);
 app.patch("/api/articles/:article_id", incrementVotes);
 app.get("/api/users", getUsers);
 app.get("/api/comments", getAllComments);
-// app.delete("/api/articles/:article_id/comments/:comment_id", removeComment);
+app.delete("/api/comments/:comment_id", removeComment);
 
 app.use((error, request, response, next) => {
   if (error.status) {

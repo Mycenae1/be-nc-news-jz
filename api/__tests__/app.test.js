@@ -391,19 +391,19 @@ describe("GET api/comments", () => {
   });
 });
 
-describe.skip("DELETE /api/articles/:article_id/comments/:comment_id ", () => {
-  test("should return a 200 status", () => {
+describe("DELETE /api/comments/:comment_id", () => {
+  test("should return a 204 status", () => {
     return supertest(app)
-      .delete(`/api/articles/1/comments/1`)
+      .delete(`/api/comments/1`)
       .expect(204)
       .then((response) => {
-        expect(response.body).toBe({});
-        console.log(response);
+        expect(response.body).toEqual({});
+        console.log(response.body);
       });
   });
   test("should respond with 404 if the comment id is invalid", () => {
     return supertest(app)
-      .delete(`/api/articles/1/comments/999999`)
+      .delete(`/api/comments/999999`)
       .expect(404)
       .then(({body}) => {
         expect(body.message).toBe("Comment not found");
