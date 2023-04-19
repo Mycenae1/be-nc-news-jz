@@ -6,7 +6,7 @@ const {
   postComment,
   updateVotes,
   fetchUsers,
-  // deleteComment,
+  deleteComment,
   fetchAllComments,
 } = require("./model");
 
@@ -95,20 +95,23 @@ const getAllComments = (request, response, next) => {
     .catch(next);
 };
 
-// const removeComment = (request, response, next) => {
-//   const id = request.params.comment_id;
-//   console.log(id);
-//   deleteComment(id)
-//     .then(() => {
-//       return deleteComment(id);
-//     })
-//     .then((comment) => {
-//       response.status(204).send(comment);
-//       console.log(comment);
-//       console.log(response);
-//     })
-//     .catch(next);
-// };
+const removeComment = (request, response, next) => {
+  const id = request.params.comment_id;
+  console.log(id);
+  deleteComment()
+    .then(() => {
+      return deleteComment(id);
+    })
+    .then((comment) => {
+      if (!comment) {
+        response.status(404).json({message: "Comment not found"});
+      } else {
+        response.status(204).send(comment);
+        console.log(comment);
+      }
+    })
+    .catch(next);
+};
 
 module.exports = {
   getTopics,
@@ -118,6 +121,6 @@ module.exports = {
   addComment,
   incrementVotes,
   getUsers,
-  // removeComment,
+  removeComment,
   getAllComments,
 };

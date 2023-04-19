@@ -170,24 +170,20 @@ const fetchAllComments = (query) => {
     `);
 };
 
-// const deleteComment = (id) => {
-//   return db
-//     .query(
-//       `DELETE FROM comments (
-//                   article_id,
-//                   author,
-//                   body,
-//                   created_at,
-//                   votes,
-//                   comment_id
+const deleteComment = (id) => {
+  return db
+    .query(
+      `DELETE FROM comments 
+       WHERE comment_id = $1 AND EXISTS(SELECT 1 FROM comments WHERE comment_id = $1) RETURNING *;`,
+      [id]
+    )
+    .then(({rows}) => {
+      console.log(rows.length);
+      console.log(rows);
 
-//               ) WHERE comment_id = $1 RETURNING*;`,
-//       [id]
-//     )
-//     .then(({rows}) => {
-//       return rows[0];
-//     });
-// };
+      return rows[0];
+    });
+};
 
 module.exports = {
   fetchTopics,
@@ -197,6 +193,6 @@ module.exports = {
   postComment,
   updateVotes,
   fetchUsers,
-  // deleteComment,
+  deleteComment,
   fetchAllComments,
 };
